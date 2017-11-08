@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Maths calculation</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  <style>
+    #questions-paper {
+      margin-top: 60px;
+    }
+    
+    #questions-paper section {
+      padding: 20px 10px;
+      border: 1px solid #eee;
+    }
+    
+    #questions-paper section.selected {
+      background: rgba(139, 195, 74, 0.20);
+      border: 1px solid rgba(139, 195, 74, 0.40);
+      border-top: 0;
+    }
+
+    #questions-paper section.selected.wrong {
+      background: rgba(244, 67, 54, 0.3);
+      border: 1px solid rgba(244, 67, 54, 0.5);
+      border-top: 0;
+    }
+
+    #questions-paper section.selected.wrong li a.selected {
+      color: #000;
+      border: 1px solid rgba(244, 67, 54, 0.60);
+      background: rgba(244, 67, 54, 0.36);
+    }
+
+    #questions-paper section.selected:first-child {
+      border-top: 1px;
+    }
+    
+    #questions-paper ul {
+      list-style: none;
+    }
+
+    .result-view {
+      display: none;
+    }
+    
+    footer .result-view .r-view {
+      padding: 10px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    #questions-paper section li {
+      list-style: none;
+    }
+
+    #questions-paper section li a {
+      display: block;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    
+    #questions-paper section li a.selected {
+      border: 1px solid rgba(139, 195, 74, 0.80);
+      background: rgba(139, 195, 74, 0.70);
+    }
+
+    #questions-paper section li a.correct {
+      color: green;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    #questions-paper section li a:hover {
+      border: 1px solid rgba(54, 111, 204, 0.6);
+      background: rgba(54, 111, 204, 0.4);
+      box-shadow: 5px 5px 10px rgba(60, 60, 60, 0.4);
+    }
+
+    .right-align {
+      text-align: right;
+    }
+    
+    .form-inline .form-group {
+      width: 49%;
+    }
+    
+    .nav-indication {
+      background: rgb(238, 238, 238);
+      border-radius: 30px;
+      margin: auto 15px;
+    }
+    
+    #showResult {
+      display: none;
+    }
+
+    #attemted,
+    #time-duration {
+      color: #000;
+      font-size: 15px;
+      font-weight: bold;
+    }
+    
+    #time-duration.warning {
+      color: #ff0000;
+    }
+
+    .error {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      text-align: center;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+  
+
+</head>
+<body>
+  <div class="container">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Maths Basic Calculations</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+          <li class="nav-indication"><a id="time-duration"></a></li>
+          <li class="nav-indication"><a id="attemted"><span></span></a></li>
+          <li><a data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-asterisk"></span></a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+        
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+              <div class="form-group form-inline">
+                <div class="form-group">
+                  <label for="email">No. of Quest:</label>
+                  <input type="number" class="form-control" id="noOfQuestion" placeholder="Enter Number Of Questions" name="noOfQuestion" value="30">
+                </div>
+                <div class="form-group right-align">
+                  <label for="email">Time:</label>
+                  <input type="number" class="form-control" id="timeDutation" placeholder="Enter Durations in min" name="timeDutation" value="15">
+                </div>
+              </div>
+              <div class="form-group form-inline">
+                <div class="form-group">
+                  <label for="email">MinOperator:</label>
+                  <input type="number" class="form-control" id="minOperator" placeholder="Enter min Number Of operations" name="minOperator" value="2">
+                </div>
+                <div class="form-group right-align">
+                  <label for="email">MaxOperator:</label>
+                  <input type="number" class="form-control" id="maxOperator" placeholder="Enter max Number Of operations" name="maxOperator" value="4">
+                </div>
+              </div>
+              <div class="form-group form-inline">
+                <div class="form-group">
+                  <label for="email">MinNumDigit:</label>
+                  <input type="number" class="form-control" id="minNumDigit" placeholder="Enter min Number Of Digits" name="minNumDigit" value="2">
+                </div>
+                <div class="form-group right-align">
+                  <label for="email">MaxNumDigit:</label>
+                  <input type="number" class="form-control" id="maxNumDigit" placeholder="Enter max Number Of Digits" name="maxNumDigit" value="5">
+                </div>
+              </div>
+              <button type="button" class="btn btn-default" id="saveSettingBtn">Save</button>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" id="closeSettingBtn" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <div id="questions-paper">
+      <div class="error">
+        <button type="button" name="button" class="btn btn-primary"  onclick="genrateQuestionPaper();"> Start </button>
+      </div>
+    </div>
+    <br/><br/><br/><br/>
+    <footer class="page-footer blue center-on-small-only" id="footer">
+      <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12 right-align">
+                <button type="button" name="button" class="btn btn-primary" id="showResult">Submit Result</button>
+            </div>
+          </div>
+          <br/><br/>
+      </div>
+      <div class="container-fluid result-view">
+          <div class="row">
+            <div class="col-sm-4 r-view alert alert-success">
+              <span> Correct: </span>
+              <span id="correct"></span>
+            </div>
+            <div class="col-sm-4 r-view alert alert-danger">
+              <span> Wrong: </span>
+              <span id="wrong"></span>
+            </div>
+            <div class="col-sm-4 r-view alert alert-info">
+              <span> Unattempted: </span>
+              <span id="unattempted"></span>
+            </div>
+          </div>
+          <br/><br/>
+      </div>
+    </footer>
+  </div>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+  var questions = [];
+  var $sections = null;
+  var secCount = 0;
+  var config = {
+    questions: 10,
+    timeDuration: 10,
+    minOperator: 2,
+    maxOperator: 4,
+    minNumDigit: 2,
+    MaxNumDigit: 5
+  }
+
+  function genrateQuestionPaper() {
+    var $questionPaper = $('#questions-paper');
+    var setTimer = setInterval(initTimer, 1000);
+
+    function updateAttemted() {
+      $('#attemted').html( $('section.selected').length + '/' + config.questions);
+    }
+    
+    function hightLightCorrectAns($options, ans){
+      $options.each(function() {
+        var val = +$(this).html();
+        if(val == ans) {
+          $(this).closest('a').addClass('correct')
+        }
+      });
+    }
+    
+    function initTimer() {
+      secCount--
+      if(secCount < 0) {
+        secCount = 59;
+        config.timeDuration--;
+      }
+      
+      if(config.timeDuration < 0) {
+        clearInterval(setTimer);
+        $('#time-duration').html('00 : 00');
+        $('#showResult').click();
+      } else {
+        if(config.timeDuration < 5) {
+          $('#time-duration').addClass('warning');
+        }
+        $('#time-duration').html(('00' + config.timeDuration ).substr(-2) + ' : ' + ('00' + secCount).substr(-2));
+      }
+    }
+
+    function bindevents() {
+      var $sections = $questionPaper.find('section');
+
+      $questionPaper.find('.option').on('click', function() {
+        var $self = $(this);
+        var $section = $self.closest('section');
+        var question = questions[$sections.index($section)];
+        if($self.hasClass('selected')) {
+          $section.find('.option').removeClass('selected');
+          $section.removeClass('selected');
+          question.selected = null;
+        } else {
+          $section.find('.option').removeClass('selected');
+          $section.addClass('selected');
+          $self.addClass('selected');
+          question.selected = +$self.find('.value').html();
+        }
+        updateAttemted();
+      });
+
+      updateAttemted();
+    }
+    
+    function Question(ques) {
+      this.index = ques.index;
+      this.expression = ques.exp;
+      this.options = ques.options;
+      this.ans = ques.ans;
+      this.quesStr = ques.str + ' = _______ ?';
+      this.selected = null;
+    }
+
+    function getNumberRange(min, max) {
+      return getNumber(getNumber(0, Math.pow(10, min)), Math.pow(10, max));
+    }
+    
+    function getNumber(min, max) {
+       return min + Math.floor(Math.random() * (max - min + 1));
+    }
+
+    function genrateQuestion() {
+      var operators = ['+', '-', 'x', '÷'];
+      var operations = getNumber(config.minOperator, config.maxOperator);
+      var expression = getNumberRange(config.minNumDigit, config.MaxNumDigit) + ' ';
+      for(var i=0; i<operations; i++) {
+        expression += operators[getNumber(0, 3)] + ' ' + getNumberRange(config.minNumDigit, config.MaxNumDigit) + ' ';
+      }
+
+      return expression;
+    }
+
+    function getSection(question) {
+      var $section = $('<section/>');
+      $section.append('<p>'+ question.index + ' ) ' + question.quesStr + '</p>');
+      $section.append(getOptions(question));
+      return $section;
+    }
+
+    function getOptions(question) {
+      var optionIndex = ['a )', 'b )', 'c )', 'd )']
+      var $list = $('<ul class="options"/>');
+      for(var i=0; i<question.options.length; i++) {
+        $list.append('<li><a class="option"><span>'+ optionIndex[i] + '</span><span class="value"> '+ question.options[i] +'</span></a></li>');
+      }
+      return $list;
+    }
+    
+    function shuffle(array) {
+      var currentIndex = array.length, temporaryValue, randomIndex;
+      while (0 !== currentIndex) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+
+      return array;
+    }
+
+    function getQuestion(index) {
+      var ques = genrateQuestion();
+      var exp = ques;
+      var ans = '?';
+
+      exp = exp.replace(/x/g, '*').replace(/÷/g, '/');
+      ans = eval(exp);
+      var count = 0;
+
+      function getDigits(num, count) {
+        count = count ? count : 0;
+        if(num > 1) {
+          return count;
+        } else {
+          return getDigits(num*10, (count+1));
+        }
+      }
+
+      function generateUniqueOptions(options, dec) {
+        var flag = true;
+        var option = (function(){
+                      var num = ans + getNumber(1, 20);
+                      if(dec) {
+                        return num/Math.pow(10, dec);
+                      }
+                      return num;
+                    })();
+
+        for(var i=0; i < options.length; i++) {
+          if(option == options[i]) {
+            flag = false;
+          }
+        }
+        if(flag) {
+          options.push(option);
+        } else {
+          generateUniqueOptions(options, dec);
+        }
+      }
+
+      function getRelativeOptions(o) {
+        var options = [ans];
+        var dec = getDigits(Math.abs(ans));
+
+        for(var i=0; i < 3; i++) {
+          generateUniqueOptions(options, dec);
+        }
+
+        return options;
+      }
+
+      function generateOptions(ans) {
+        if(ans > 0) {
+          if( ans < 1) {
+            return getRelativeOptions(0.1);
+          } else {
+            return getRelativeOptions(10);
+          }
+        } else {
+          if( ans > -1) {
+            return getRelativeOptions(10);
+          } else {
+            return getRelativeOptions(0.1);
+          }
+        }
+      }
+
+      function getOptions() {
+        var options = generateOptions(ans);
+        return shuffle(options);
+      }
+      
+      return {
+        index: index,
+        exp: exp,
+        options: getOptions(ans),
+        ans: ans,
+        str: ques
+      }
+    }
+    
+    function init() {
+      try{
+        questions = [];
+        $questionPaper.html('');
+        for(var i=0; i < config.questions; i++) {
+          var question = new Question(getQuestion(i+1));
+          questions.push(question); 
+          $questionPaper.append(getSection(question));
+        }
+        
+        $sections = $questionPaper.find('section');
+        
+        $('.result-view').hide();
+        $('#showResult').show();
+        bindevents();
+      } catch(err) {
+        $('#showResult').hide();
+        $questionPaper.html(`
+          <div class="error">
+            <h1>Something went wrong</h1>
+            <h3>Please Refresh the page</h3>
+            <br/>
+            <a onclick="document.location.reload();" class='btn btn-primary'>Reload</a>
+          </div>`);
+      }
+      
+    }
+    init();
+    $('#saveSettingBtn').on('click', function() {
+      clearInterval(setTimer);
+      secCount = -1;
+      config = {
+        questions: +$('#noOfQuestion').val(),
+        timeDuration: +$('#timeDutation').val(),
+        minOperator: +$('#minOperator').val(),
+        maxOperator: +$('#maxOperator').val(),
+        minNumDigit: +$('#minNumDigit').val(),
+        MaxNumDigit: +$('#maxNumDigit').val(),
+      }
+
+      $('#closeSettingBtn').click();
+      init();
+      setTimer = setInterval(initTimer, 1000);
+    });
+    
+    $('#showResult').on('click', function() {
+      var result = {
+        correct: 0,
+        wrong: 0,
+        unattempted: 0,
+      }
+
+      for(var i=0; i < questions.length; i++) {
+        if(questions[i].selected !== null) {
+          if(questions[i].selected !== questions[i].ans) {
+            var $section = $($sections[i]);
+            $section.addClass('wrong');
+            hightLightCorrectAns($section.find('.value'), questions[i].ans);
+            result.wrong++;
+          } else {
+            result.correct++;
+          }
+        } else {
+          result.unattempted++;
+        }
+      }
+      $(this).hide();
+      $('#correct').html(result.correct);
+      $('#wrong').html(result.wrong);
+      $('#unattempted').html(result.unattempted);
+      $('.result-view').show();
+      setTimeout(function() {
+        $('html, body').animate({
+          scrollTop: $("#footer").offset().top
+        }, 2000);
+      }, 5);
+      
+    });
+  }
+</script>
+</body>
+</html>
